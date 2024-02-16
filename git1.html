@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Parking Service</title>
+        <link rel="stylesheet" href="git1.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>"SOLO LEVELING"</h1>
+            <hr>
+            <h2>Parking Service</h2>
+            <form action="/submit" method="post">
+
+                <fieldset>
+                    <legend>Page 1 of 2</legend>
+                    <h2>Driver Details:</h2>
+            <hr>
+            <br>
+                    <label for="userName">Your Name:</label>
+                    <input type="text" id="userName" name="userName" required>
+
+                    <label for="userEmail">Your Email:</label>
+                    <input type="text" id="userEmail" name="userEmail" required>
+
+                    <label for="userPhone">Your Phone:</label>
+                    <input type="text" id="userPhone" name="userPhone" required>
+
+                    <label for="userPicture">Upload Your Picture:</label>
+                    <input type="file" id="userPicture" name="userPicture" accept="image/*">
+
+                    <h2>Owner Details:</h2>
+                    <hr><br>
+
+                    <label for="userName">Owner Name:</label>
+                    <input type="text" id="userName" name="userName" required>
+
+                    <label for="userEmail">Owner Email:</label>
+                    <input type="text" id="userEmail" name="userEmail" required>
+
+                    <label for="userPhone">Owner Phone:</label>
+                    <input type="text" id="userPhone" name="userPhone" required>
+
+                    <label for="Address">Address:</label>
+                    <textarea id="Address" name="Address" rows="4" required></textarea>
+
+                    <button class="next-btn" type="button" onclick="nextPage()">Next</button>
+                </fieldset>
+                
+                <fieldset style="display: none;">
+                    <legend>Page 2 of 2</legend>
+                    
+                    <h2>Vehicle Details:</h2>
+                    <hr><br>
+                    
+                    <label for="number">Vehicle Number:</label>
+                    <input type="text" id="number" name="number" required>
+
+                    <label for="propertyPDF">Upload PDF (Vehicle Documents):</label>
+                    <input type="file" id="vehiclePDF" name="vehiclePDF" accept=".pdf">
+
+                    <div class="options">
+                        <label for="Vehicle type">Vehicle type:</label>
+                        <div>
+                            <input type="radio" id="Car" name="Vehicle type" value="Car">Car</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="Bike" name="Vehicle type" value="Bike">Bike</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="Scooty" name="Vehicle type" value="Scooty">Scooty</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="Bicycle" name="Vehicle type" value="Bicycle">Bicycle</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="Auto Rickshaw" name="Vehicle type" value="Auto Rickshaw">Auto Rickshaw</input>
+                        </div>
+                    </div>
+                    
+                    <h2>Parking Details:</h2>
+                    <hr><br>
+
+                    <div class="options">
+                        <label>Parking for Time: <h4>(you can park for 6 hrs max)</h4></label>
+                        <div>
+                            <input type="radio" id="time" name="time" value="1">less than 1 hr</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="time" name="time" value="2">1-2 hr</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="time" name="time" value="3">2-3 hr</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="time" name="time" value="4">3-4 hr</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="time" name="time" value="5">4-5 hr</input>
+                        </div>
+                        <div>
+                            <input type="radio" id="time" name="time" value="6">5-6 hr</input>
+                        </div>
+                    </div>
+
+                    <label for="rent">Calculate Rent:   <input type="button" value="Calculate" onclick="calculateRent()"></label>
+                    <p id="output"></p>
+                    <label for="rent">Generate QR for payment:   <input type="button" id="payButton" value="Pay"></label>
+                    <div id="qrcode"></div>
+
+                    <button class="prev-btn" type="button" onclick="prevPage()">Previous</button>
+                    <button class="submit" type="submit">Submit</button>
+                </fieldset>
+
+            </form>
+        </div>
+
+        <script>
+            function nextPage() {
+                // Hide Page 1 and show Page 2
+                document.querySelector('fieldset:nth-of-type(1)').style.display = 'none';
+                document.querySelector('fieldset:nth-of-type(2)').style.display = 'block';
+            }
+
+            function prevPage() {
+                // Hide Page 2 and show Page 1
+                document.querySelector('fieldset:nth-of-type(2)').style.display = 'none';
+                document.querySelector('fieldset:nth-of-type(1)').style.display = 'block';
+            }
+            function calculateRent() {
+            // get the selected radio button value
+            var radios = document.getElementsByName("time");
+            var time = 0;
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                time = radios[i].value;
+                break;
+                }
+            }
+            // calculate the rent by multiplying the room value by 50
+            var rent = time * 50;
+            // display the rent in the output element
+            document.getElementById("output").innerHTML = "The rent is " + rent + " rupees.";
+            }
+            </script>
+            <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
+            <script>
+            const radios = document.querySelectorAll('input[name="time"]');
+            const payButton = document.getElementById("payButton");
+        
+            payButton.addEventListener("click", generateQRCode);
+        
+            function generateQRCode() {
+                let amount;
+        
+                radios.forEach(radio => {
+                if (radio.checked) {
+                    amount = radio.value;
+                }
+                });
+        
+                if (amount) {
+                const qrcode = new QRCode('qrcode', {
+                    text: amount,
+                    width: 128,
+                    height: 128,
+                    colorDark : "#000000",
+                    colorLight : "transparent",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+                }
+            }
+            </script>
+    </body>
+
+    </html>
